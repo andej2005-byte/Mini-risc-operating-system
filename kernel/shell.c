@@ -7,17 +7,21 @@
 #define INPUT_BUFFER_SIZE 128
 #define ASM_MEMORY_SIZE 256
 
+//sklapanje linije
 static char input_buffer[INPUT_BUFFER_SIZE];
 static int input_index = 0;
 
+//prekidac rezima 
 static int asm_mode = 0;
 
+//u ovim linijama se cuvaju asemblirane instrukcije
 static u32 asm_memory[ASM_MEMORY_SIZE];
 static u32* asm_output = asm_memory;
-
 static int asm_memory_index = 0;
+
 static int asm_using_custom_address = 0;
 static u32 asm_base_address = 0;
+
 
 static void print_prompt() {
     if (asm_mode) {
@@ -27,6 +31,7 @@ static void print_prompt() {
     }
 }
 
+//zamena za strcmp 
 static int str_equal(char* a, char* b) {
     int i = 0;
 
@@ -41,16 +46,20 @@ static int str_equal(char* a, char* b) {
     return a[i] == 0 && b[i] == 0;
 }
 
+//funkcija koja se koristi za proveru da li je razmak ili je tab
 static int is_space(char c) {
     return c == ' ' || c == '\t';
 }
 
+//funkcija koja se koristi za preskakanje svih razmaka
 static void skip_spaces(char** p) {
     while (is_space(**p)) {
         (*p)++;
     }
 }
 
+//cita jednu rec iz linije prvo preskoči razmake,
+//pa kopira znakove u out dok ne naidje na razmak ili kraj.
 static int read_word(char** p, char* out, int max) {
     int i = 0;
 
@@ -71,6 +80,7 @@ static int read_word(char** p, char* out, int max) {
     return i > 0;
 }
 
+//funkcija koja se koristi za prebacivanje heksadecimalne cifre u broj
 static int hex_value(char c) {
     if (c >= '0' && c <= '9') {
         return c - '0';
@@ -87,6 +97,7 @@ static int hex_value(char c) {
     return -1;
 }
 
+//
 static int parse_number(char* text, u32* out) {
     int i = 0;
     u32 value = 0;
@@ -130,6 +141,7 @@ static int parse_number(char* text, u32* out) {
     return 0;
 }
 
+//ispisuje broj u heksadecimalnom formatu
 static void print_hex_digit(unsigned int value) {
     value = value & 0xF;
 
@@ -150,6 +162,7 @@ static void print_hex_u32(u32 value) {
     }
 }
 
+//praznjenje bafera 
 static void clear_input_buffer() {
     int i;
 
@@ -304,6 +317,7 @@ static void handle_asm_command(char* line) {
     }
 }
 
+
 static void handle_line() {
     input_buffer[input_index] = 0;
 
@@ -325,6 +339,7 @@ void shell_init() {
 
     print_prompt();
 }
+
 
 void shell_input(char c) {
     if (c == '\n') {
