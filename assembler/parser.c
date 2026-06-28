@@ -1,6 +1,7 @@
 #include "parser.h"
 
 int parse_register(char* text) {
+   //provera da li registar pocinje slovom x
     if (text[0] != 'x') {
         return -1;
     }
@@ -8,6 +9,7 @@ int parse_register(char* text) {
     int i = 1;
     int value = 0;
 
+    //provera da li je cifra posle x
     if (text[i] < '0' || text[i] > '9') {
         return -1;
     }
