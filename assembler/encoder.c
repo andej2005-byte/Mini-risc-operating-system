@@ -1,5 +1,6 @@
 #include "encoder.h"
 
+
 u32 encode_r_type(u32 funct7, u32 rs2, u32 rs1, u32 funct3, u32 rd, u32 opcode) {
     return ((funct7 & 0x7F) << 25) |
            ((rs2    & 0x1F) << 20) |
