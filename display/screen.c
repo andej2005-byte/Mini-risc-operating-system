@@ -7,6 +7,7 @@
 #define VIDEO_MEMORY 0xb8000
 #define WHITE_ON_BLACK 0x0f
 
+/* koristi se za ispis 1 slova */
 void print_char(char c, int col, int row) {
     char* video_memory = (char*) VIDEO_MEMORY;
     int offset;
@@ -38,11 +39,13 @@ void print_char(char c, int col, int row) {
         video_memory[offset + 1] = WHITE_ON_BLACK;
         offset += 2;
     }
-    
+
+    /*provera da li treba skrolovati */
     offset = handle_scrolling(offset);
     set_cursor_offset(offset);
 }
 
+/*pisanje stringa */
 void print_string(char* string, int col, int row) {
     int i = 0;
 
@@ -56,6 +59,7 @@ void print_string(char* string, int col, int row) {
     }
 }
 
+/*funkcija za brisanje celog ekrana*/
 void clear_screen() {
     int row;
     int col;
@@ -67,6 +71,7 @@ void clear_screen() {
     }
 }
 
+/*funkcija koja cita gde se kursor nalazi*/
 int get_cursor_offset() {
     port_byte_out(REG_SCREEN_CTRL, 14);
     int offset = port_byte_in(REG_SCREEN_DATA) << 8;
@@ -76,6 +81,7 @@ int get_cursor_offset() {
 
     return offset * 2;
 }
+
 
 void set_cursor_offset(int offset) {
     offset /= 2;
@@ -87,15 +93,17 @@ void set_cursor_offset(int offset) {
     port_byte_out(REG_SCREEN_DATA, (unsigned char)(offset & 0xff));
 }
 
+/* funkcija za pretvaranje u bajt */
 int get_screen_offset(int col, int row) {
     return 2 * (row * 80 + col);
 }
 
-
+/* iz pomeraja vracanje reda */
 int get_offset_row(int offset) {
     return offset / (2 * 80);
 }
 
+/* iz pomeraja vracanje kolone */
 int get_offset_col(int offset) {
     return (offset - (get_offset_row(offset) * 2 * 80)) / 2;
 }
